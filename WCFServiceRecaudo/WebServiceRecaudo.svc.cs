@@ -183,11 +183,13 @@ namespace WCFServiceRecaudo
             }
         }
 
-        public DatosCuponPago generarDatosCuponPago(int nuIdSuscriptor)
+        public List<DatosCuponPago> generarDatosCuponPago(int nuIdSuscriptor,int nuValorCuponPago, long nuIdCuentaCobro)
         {
-            DatosCuponPago RetornaDatosCuponPago = new DatosCuponPago();
+            List<DatosCuponPago> RetornaDatosCuponPago = new List<DatosCuponPago>();
             CreaCuponPago objDatosCuponPago = new CreaCuponPago();
-            RetornaDatosCuponPago = objDatosCuponPago.creaCuponPago(
+            int nuIdTipoCuponPago = 2;
+            int nuIdEstadoCuponPago = 1;
+            return RetornaDatosCuponPago = objDatosCuponPago.creaCuponPago(
                                                 nuIdSuscriptor,
                                                 nuValorCuponPago,
                                                 nuIdTipoCuponPago,
@@ -195,11 +197,5 @@ namespace WCFServiceRecaudo
                                                 nuIdCuentaCobro
                                                 );
         }
-
-
-
-
-
-/////
     }
 }

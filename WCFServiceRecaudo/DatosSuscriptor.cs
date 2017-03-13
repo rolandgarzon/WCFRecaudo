@@ -14,7 +14,7 @@ namespace WCFServiceRecaudo
         [DataMember]
         public int nuFacturasconSaldo { get; set; }
         [DataMember]
-        public double nuIdCuentaCobro { get; set; }
+        public long nuIdCuentaCobro { get; set; }
         [DataMember]
         public double nuSaldoPendienteUltimaFactura { get; set; }
     }

@@ -7,7 +7,7 @@ namespace WCFServiceRecaudo
     {
 
         [DataMember]
-        public double nuIdCuponPago { get; set; }
+        public long nuIdCuponPago { get; set; }
 
         [DataMember]
         public int nuValorCuponPago { get; set; }
@@ -22,7 +22,7 @@ namespace WCFServiceRecaudo
         public int nuIdEstadoCuponPago { get; set; }
 
         [DataMember]
-        public double nuIdCuentaCobro { get; set; }
+        public long nuIdCuentaCobro { get; set; }
 
         [DataMember]
         public int nuIdPais { get; set; }
