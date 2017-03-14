@@ -26,11 +26,13 @@ namespace WCFServiceRecaudo
                 string hostname = System.Security.Principal.WindowsIdentity.GetCurrent().Name.ToString();
                 string vaUser = "RECAUDADOR";
                 int nuIdPais = 57; int nuIdDepartamento = 76; int nuIdMunicipio = 834;
+                string lugartrabajo = nuIdPais.ToString() + nuIdDepartamento.ToString() + nuIdMunicipio.ToString();
+                int numerolugartrabajo = lugartrabajo.Length;
                 //System.Threading.Thread.Sleep(1000);
                 DataTable dtDatosCuponGenerado = new DataTable();
                 DatosCuponPago ConsultaCuponPagoNuevo = new DatosCuponPago();
-            try
-            {
+                try
+                {
 
                 //obtener la secuencia del cupon
                 SiewebDBCommand cmdSecuencia = new SiewebDBCommand();
@@ -50,7 +52,6 @@ namespace WCFServiceRecaudo
                 string lnuIdCuentaCobro = nuIdPais.ToString() + nuIdDepartamento.ToString() + nuIdMunicipio.ToString() + nuIdCuentaCobro.ToString();
                 using (SiewebDBCommand cmdCuponPago = new SiewebDBCommand())
                 {
-                    //cmdCuponPago.QueryString = "INSERT INTO cm_cuponpago VALUES(" + numeroSecuencia + "," + nuValorCuponPago + ",'" + daFechaGeneracion.Day + "/" + daFechaGeneracion.Month + "/" + daFechaGeneracion.Year + "',";
                     cmdCuponPago.QueryString = "INSERT INTO cm_cuponpago VALUES(" + numeroSecuencia + "," + nuValorCuponPago + ",'" + vaFechaGeneracion + "',";
                     cmdCuponPago.QueryString = cmdCuponPago.QueryString + nuIdTipoCuponPago + "," + nuIdEstadoCuponPago + "," + lnuIdCuentaCobro + ",";
                     cmdCuponPago.QueryString = cmdCuponPago.QueryString + nuIdPais + "," + nuIdDepartamento + "," + nuIdMunicipio + ",";
@@ -73,7 +74,7 @@ namespace WCFServiceRecaudo
                 //omb.ShowMessage("Se genero con exito el cupón: " + idSecuencia);
 
                 SiewebDBCommand cmdRetornaCuponpago = new SiewebDBCommand();
-                cmdRetornaCuponpago.QueryString = "SELECT idcuponpago,valor,fechageneracion,idcuentacobro FROM cm_cuponpago WHERE idcuponpago= " + numeroSecuencia;
+                cmdRetornaCuponpago.QueryString = "SELECT SubStr(idcuponpago,numerolugartrabajo),valor,fechageneracion,idcuentacobro FROM cm_cuponpago WHERE idcuponpago= " + numeroSecuencia;
                 cmdRetornaCuponpago.ExecuteStringNonQueryCommand();
 
                 dtDatosCuponGenerado = cmdRetornaCuponpago.ExecuteStringCommand();

@@ -20,7 +20,7 @@ namespace WCFServiceRecaudo
         List<DatosCuponPago> obtenerDatosCuponPago(long nuIdcuponpago);
 
         [OperationContract]
-        Boolean obtenerEstadoFacturacion(long nuIdsuscriptor);
+        Boolean obtenerEstadoFacturacion(long nuIdcuponpago);
 
         [OperationContract]
         List<DatosCuponPago> generarDatosCuponPago(long nuIdSuscriptor, int nuValorCuponPago, long nuIdCuentaCobro);

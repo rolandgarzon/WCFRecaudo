@@ -26,14 +26,17 @@ namespace WCFServiceRecaudo
             List<DatosCuponPago> ConsultaCuponPago = new List<DatosCuponPago>();
 
             DataTable dtDatosBasicos = new DataTable();
-            string vaNumeroCuponPago = "5776834" + nuIdcuponpago;
+            int nuIdPais = 57; int nuIdDepartamento = 76; int nuIdMunicipio = 834;
+            string lugartrabajo = nuIdPais.ToString() + nuIdDepartamento.ToString() + nuIdMunicipio.ToString();
+            int numerolugartrabajo = lugartrabajo.Length;
+            string vaNumeroCuponPago = lugartrabajo + nuIdcuponpago;
             double numeroCuponpago = Convert.ToDouble(vaNumeroCuponPago);
             DatosCuponPago DatosCuponPago = new DatosCuponPago();
             try
             {
                 using (SiewebDBCommand cmdDatosBasicos = new SiewebDBCommand())
                 {
-                    cmdDatosBasicos.QueryString = "SELECT idcuponpago,valor,fechageneracion,idestadocupon FROM cm_cuponpago";
+                    cmdDatosBasicos.QueryString = "SELECT SubStr(idcuponpago,numerolugartrabajo),valor,fechageneracion,idestadocupon FROM cm_cuponpago";
                     cmdDatosBasicos.QueryString = cmdDatosBasicos.QueryString + " where idpais =57 and idestadocupon=1";
                     cmdDatosBasicos.QueryString = cmdDatosBasicos.QueryString + " and   iddepartamento =76";
                     cmdDatosBasicos.QueryString = cmdDatosBasicos.QueryString + " and   idmunicipio =834";
@@ -77,7 +80,10 @@ namespace WCFServiceRecaudo
         {
             List<DatosSuscriptor> ConsultaSuscriptor = new List<DatosSuscriptor>();
             DataTable dtDatosBasicos = new DataTable();
-            string vaNumeroSuscriptor = "5776834" + nuIdsuscriptor;
+            int nuIdPais = 57; int nuIdDepartamento = 76; int nuIdMunicipio = 834;
+            string lugartrabajo = nuIdPais.ToString() + nuIdDepartamento.ToString() + nuIdMunicipio.ToString();
+            int numerolugartrabajo = lugartrabajo.Length;
+            string vaNumeroSuscriptor = lugartrabajo + nuIdsuscriptor;
             long numeroSuscriptor = Convert.ToInt64(vaNumeroSuscriptor);
             DatosSuscriptor DatosSuscriptor = new DatosSuscriptor();
             try
@@ -85,7 +91,7 @@ namespace WCFServiceRecaudo
                 using (SiewebDBCommand cmdDatosBasicos = new SiewebDBCommand())
                 {
                     //Consultar datos del suscriptor
-                    cmdDatosBasicos.QueryString = "select  cm_suscriptor.idsuscriptor suscriptor,trim(cm_suscriptor.nombre)||' '||trim(cm_suscriptor.apellido) nombrecompleto,TRIM(TO_CHAR(cm_suscriptor.saldopendiente,'999G999G990D99')) AS saldopendiente, Max(cm_cuentacobro.idcuentacobro) cuentacobro,facturasconsaldo";
+                    cmdDatosBasicos.QueryString = "select  substr(cm_suscriptor.idsuscriptor,numerolugartrabajo) suscriptor,trim(cm_suscriptor.nombre)||' '||trim(cm_suscriptor.apellido) nombrecompleto,TRIM(TO_CHAR(cm_suscriptor.saldopendiente,'999G999G990D99')) AS saldopendiente, Max(substr(cm_cuentacobro.idcuentacobro,numerolugartrabajo)) cuentacobro,facturasconsaldo";
                     cmdDatosBasicos.QueryString = cmdDatosBasicos.QueryString + " from cm_cuentacobro,cm_suscriptor";
                     cmdDatosBasicos.QueryString = cmdDatosBasicos.QueryString + " where cm_cuentacobro.idsuscriptor=cm_suscriptor.idsuscriptor";
                     cmdDatosBasicos.QueryString = cmdDatosBasicos.QueryString + " and cm_suscriptor.idsuscriptor=" + numeroSuscriptor;
@@ -172,20 +178,24 @@ namespace WCFServiceRecaudo
         /// verdadero = esta en proceso de facturacion
         /// falso = se puede generar cupon
         /// </returns>
-        public bool obtenerEstadoFacturacion(long nuIdsuscriptor)
+        public bool obtenerEstadoFacturacion(long nuIdCuponPago)
         {
             DataTable dtEstadoFacturacion = new DataTable();
-            string vaNumeroSuscriptor = "5776834" + nuIdsuscriptor;
-            double numeroSuscriptor = Convert.ToDouble(vaNumeroSuscriptor);
+            int nuIdPais = 57; int nuIdDepartamento = 76; int nuIdMunicipio = 834;
+            string lugartrabajo = nuIdPais.ToString() + nuIdDepartamento.ToString() + nuIdMunicipio.ToString();
+            int numerolugartrabajo = lugartrabajo.Length;
+            string vaNumeroCupon = lugartrabajo + nuIdCuponPago;
+            long numeroCuponPago = Convert.ToInt64(vaNumeroCupon);
             try
+              { 
+            using (SiewebDBCommand cmdDatosBasicos = new SiewebDBCommand())
             {
-                using (SiewebDBCommand cmdDatosBasicos = new SiewebDBCommand())
-                {
-                    cmdDatosBasicos.QueryString = " SELECT idsuscriptor FROM cm_suscriptor ";
-                    cmdDatosBasicos.QueryString = cmdDatosBasicos.QueryString + " WHERE idsuscriptor=" + numeroSuscriptor;
-                    cmdDatosBasicos.QueryString = cmdDatosBasicos.QueryString + " and idciclofacturacion in (select idciclofacturacion from cm_vigencia where bloqueomovimiento='S')";
+                cmdDatosBasicos.QueryString = " SELECT idcuentacobro FROM cm_cuponpago ";
+                cmdDatosBasicos.QueryString = cmdDatosBasicos.QueryString + " WHERE idcuponpago=" + numeroCuponPago;
+                cmdDatosBasicos.QueryString = cmdDatosBasicos.QueryString + " AND idcuentacobro IN (SELECT idcuentacobro FROM cm_cuentacobro ";
+                cmdDatosBasicos.QueryString = cmdDatosBasicos.QueryString + " AND idciclofacturacion IN (select idciclofacturacion from cm_vigencia where bloqueomovimiento='S')";
 
-                    dtEstadoFacturacion = cmdDatosBasicos.ExecuteStringCommand();
+                dtEstadoFacturacion = cmdDatosBasicos.ExecuteStringCommand();
                     if (dtEstadoFacturacion.Rows.Count > 0)
                     {
                         //si encuentra datos es porque el suscriptor esta bloqueado para moviminetos
