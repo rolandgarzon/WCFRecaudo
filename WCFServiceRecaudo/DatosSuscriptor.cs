@@ -6,7 +6,7 @@ namespace WCFServiceRecaudo
     public class DatosSuscriptor : BaseRespuesta
     {
         [DataMember]
-        public double nuIdSuscriptor { get; set; }
+        public long nuIdSuscriptor { get; set; }
         [DataMember]
         public string vaNombre{ get; set; }
         [DataMember]

@@ -10,7 +10,7 @@ namespace WCFServiceRecaudo
     public class CreaCuponPago
     {
         public List<DatosCuponPago> creaCuponPago(
-                                                int nuIdSuscriptor,
+                                                long nuIdSuscriptor,
                                                 int nuValorCuponPago,
                                                 int nuIdTipoCuponPago,
                                                 int nuIdEstadoCuponPago,

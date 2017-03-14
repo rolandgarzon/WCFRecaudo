@@ -14,16 +14,16 @@ namespace WCFServiceRecaudo
     {
 
         [OperationContract]
-        List<DatosSuscriptor> obtenerDatosSuscriptor(int nuIdsuscriptor);
+        List<DatosSuscriptor> obtenerDatosSuscriptor(long nuIdsuscriptor);
 
         [OperationContract]
-        List<DatosCuponPago> obtenerDatosCuponPago(int nuIdcuponpago);
+        List<DatosCuponPago> obtenerDatosCuponPago(long nuIdcuponpago);
 
         [OperationContract]
-        Boolean obtenerEstadoFacturacion(int nuIdsuscriptor);
+        Boolean obtenerEstadoFacturacion(long nuIdsuscriptor);
 
         [OperationContract]
-        List<DatosCuponPago> generarDatosCuponPago(int nuIdSuscriptor, int nuValorCuponPago, long nuIdCuentaCobro);
+        List<DatosCuponPago> generarDatosCuponPago(long nuIdSuscriptor, int nuValorCuponPago, long nuIdCuentaCobro);
 
     }
 
