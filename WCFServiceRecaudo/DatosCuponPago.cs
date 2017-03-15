@@ -13,6 +13,24 @@ namespace WCFServiceRecaudo
         public int nuValorCuponPago { get; set; }
 
         [DataMember]
+        public long nuIdSuscriptor { get; set; }
+
+        [DataMember]
+        public string vaNombre { get; set; }
+
+        [DataMember]
+        public double nuSaldoPendiente { get; set; }
+
+        [DataMember]
+        public double saldoafavor { get; set; }
+
+        [DataMember]
+        public double valortotalfacturado { get; set; }
+
+        [DataMember]
+        public double valortotalfacturadoglobal { get; set; }
+
+        [DataMember]
         public DateTime daFechaGeneracion { get; set; }
 
         [DataMember]
