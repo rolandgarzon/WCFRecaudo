@@ -34,10 +34,13 @@ namespace WCFServiceRecaudo
         public DateTime daFechaGeneracion { get; set; }
 
         [DataMember]
-        public int nuIdTipoCuponPago { get; set; }
+        public string vaTipoCuponPago { get; set; }
 
         [DataMember]
         public int nuIdEstadoCuponPago { get; set; }
+
+        [DataMember]
+        public string vaEstadoCuponPago { get; set; }
 
         [DataMember]
         public long nuIdCuentaCobro { get; set; }

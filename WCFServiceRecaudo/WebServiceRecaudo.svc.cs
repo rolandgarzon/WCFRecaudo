@@ -35,14 +35,8 @@ namespace WCFServiceRecaudo
             try
             {
                 using (SiewebDBCommand cmdDatosBasicos = new SiewebDBCommand())
-                {/*
-                    cmdDatosBasicos.QueryString = "SELECT SubStr(idcuponpago,numerolugartrabajo),valor,fechageneracion,idestadocupon FROM cm_cuponpago";
-                    cmdDatosBasicos.QueryString = cmdDatosBasicos.QueryString + " where idpais =57 and idestadocupon=1";
-                    cmdDatosBasicos.QueryString = cmdDatosBasicos.QueryString + " and   iddepartamento =76";
-                    cmdDatosBasicos.QueryString = cmdDatosBasicos.QueryString + " and   idmunicipio =834";
-                    cmdDatosBasicos.QueryString = cmdDatosBasicos.QueryString + " and   idcuponpago =" + numeroCuponpago;
-                    */
-                    cmdDatosBasicos.QueryString = "select  cm_cuponpago.idcuponpago,cm_cuponpago.valor,cm_suscriptor.idsuscriptor,trim(cm_suscriptor.nombre)||' '||trim(cm_suscriptor.apellido) nombrecompleto,cm_suscriptor.saldopendiente,cm_suscriptor.saldoafavor,cm_estadocupon.descripcion estado, cm_tipocuponpago.descripcion tipo ";
+                {
+                    cmdDatosBasicos.QueryString = "select SubStr(cm_cuponpago.idcuponpago,8)cuponpago, cm_cuponpago.valor valor, SubStr(cm_suscriptor.idsuscriptor,8)suscriptor, trim(cm_suscriptor.nombre)||' '||trim(cm_suscriptor.apellido) nombrecompleto,cm_suscriptor.saldopendiente saldopte,cm_suscriptor.saldoafavor,cm_cuponpago.idestadocupon idestado,cm_estadocupon.descripcion estado, cm_tipocuponpago.descripcion tipo,cm_cuponpago.fechageneracion fechagen ";
                     cmdDatosBasicos.QueryString = cmdDatosBasicos.QueryString + " ,nvl(cm_factura.valortotalfacturado,0) valortotalfacturado, nvl(cm_factura.valorbienesservicios,0) valorbienesservicios, nvl(cm_factura.valortotalfacturadoglobal,0) valortotalfacturadoglobal ";
                     cmdDatosBasicos.QueryString = cmdDatosBasicos.QueryString + " from cm_cuentacobro LEFT OUTER JOIN cm_factura ";
                     cmdDatosBasicos.QueryString = cmdDatosBasicos.QueryString + "                     ON cm_factura.idcuentacobro = cm_cuentacobro.idcuentacobro ";
@@ -52,6 +46,9 @@ namespace WCFServiceRecaudo
                     cmdDatosBasicos.QueryString = cmdDatosBasicos.QueryString + " and cm_cuponpago.idestadocupon=cm_estadocupon.idestadocupon ";
                     cmdDatosBasicos.QueryString = cmdDatosBasicos.QueryString + " and cm_cuponpago.ditipocuponpago=cm_tipocuponpago.idtipocuponpago ";
                     cmdDatosBasicos.QueryString = cmdDatosBasicos.QueryString + " and cm_cuponpago.idestadocupon in ('1') ";
+                    cmdDatosBasicos.QueryString = cmdDatosBasicos.QueryString + " and cm_cuponpago.idpais=" + nuIdPais;
+                    cmdDatosBasicos.QueryString = cmdDatosBasicos.QueryString + " and cm_cuponpago.iddepartamento=" + nuIdDepartamento;
+                    cmdDatosBasicos.QueryString = cmdDatosBasicos.QueryString + " and cm_cuponpago.idmunicipio=" + nuIdMunicipio;
                     cmdDatosBasicos.QueryString = cmdDatosBasicos.QueryString + " and cm_cuponpago.idcuponpago=" + numeroCuponpago;
 
 
@@ -63,16 +60,18 @@ namespace WCFServiceRecaudo
                 {
                     foreach (DataRow dr in dtDatosBasicos.Rows)
                     {
-                        DatosCuponPago.nuIdCuponPago = Convert.ToInt64(dr["idcuponpago"]);
+                        DatosCuponPago.nuIdCuponPago = Convert.ToInt64(dr["cuponpago"]);
                         DatosCuponPago.nuValorCuponPago = Convert.ToInt32(dr["valor"]);
-                        -DatosCuponPago.nuValorCuponPago = Convert.ToInt32(dr["valor"]);
-                        -DatosCuponPago.nuValorCuponPago = Convert.ToInt32(dr["valor"]);
-                        -DatosCuponPago.nuValorCuponPago = Convert.ToInt32(dr["valor"]);
-                        -DatosCuponPago.nuValorCuponPago = Convert.ToInt32(dr["valor"]);
-                        -DatosCuponPago.nuValorCuponPago = Convert.ToInt32(dr["valor"]);
-                        -DatosCuponPago.nuValorCuponPago = Convert.ToInt32(dr["valor"]);
-                        DatosCuponPago.daFechaGeneracion = Convert.ToDateTime(dr["fechageneracion"]);
-                        DatosCuponPago.nuIdEstadoCuponPago = Convert.ToInt32(dr["idestadocupon"]);
+                        DatosCuponPago.nuIdSuscriptor = Convert.ToInt64(dr["suscriptor"]);
+                        DatosCuponPago.vaNombre = dr["nombrecompleto"].ToString();
+                        DatosCuponPago.nuSaldoPendiente = Convert.ToDouble(dr["saldopte"]);
+                        DatosCuponPago.valortotalfacturado = Convert.ToInt32(dr["valortotalfacturado"]);
+                        DatosCuponPago.valortotalfacturadoglobal = Convert.ToInt32(dr["valortotalfacturadoglobal"]);
+                        DatosCuponPago.vaTipoCuponPago = dr["tipo"].ToString();
+                        DatosCuponPago.daFechaGeneracion = Convert.ToDateTime(dr["fechagen"]);
+                        DatosCuponPago.nuIdEstadoCuponPago = Convert.ToInt32(dr["idestado"]);
+                        DatosCuponPago.vaEstadoCuponPago = dr["estado"].ToString();
+                        
                         ConsultaCuponPago.Add(DatosCuponPago);
                     }
                     return ConsultaCuponPago;
@@ -112,7 +111,7 @@ namespace WCFServiceRecaudo
                 using (SiewebDBCommand cmdDatosBasicos = new SiewebDBCommand())
                 {
                     //Consultar datos del suscriptor
-                    cmdDatosBasicos.QueryString = "select  substr(cm_suscriptor.idsuscriptor,numerolugartrabajo) suscriptor,trim(cm_suscriptor.nombre)||' '||trim(cm_suscriptor.apellido) nombrecompleto,TRIM(TO_CHAR(cm_suscriptor.saldopendiente,'999G999G990D99')) AS saldopendiente, Max(substr(cm_cuentacobro.idcuentacobro,numerolugartrabajo)) cuentacobro,facturasconsaldo";
+                    cmdDatosBasicos.QueryString = "select  substr(cm_suscriptor.idsuscriptor,8) suscriptor,trim(cm_suscriptor.nombre)||' '||trim(cm_suscriptor.apellido) nombrecompleto,TRIM(TO_CHAR(cm_suscriptor.saldopendiente,'999G999G990D99')) AS saldopendiente, Max(substr(cm_cuentacobro.idcuentacobro,8)) cuentacobro,facturasconsaldo";
                     cmdDatosBasicos.QueryString = cmdDatosBasicos.QueryString + " from cm_cuentacobro,cm_suscriptor";
                     cmdDatosBasicos.QueryString = cmdDatosBasicos.QueryString + " where cm_cuentacobro.idsuscriptor=cm_suscriptor.idsuscriptor";
                     cmdDatosBasicos.QueryString = cmdDatosBasicos.QueryString + " and cm_suscriptor.idsuscriptor=" + numeroSuscriptor;
@@ -214,7 +213,7 @@ namespace WCFServiceRecaudo
                 cmdDatosBasicos.QueryString = " SELECT idcuentacobro FROM cm_cuponpago ";
                 cmdDatosBasicos.QueryString = cmdDatosBasicos.QueryString + " WHERE idcuponpago=" + numeroCuponPago;
                 cmdDatosBasicos.QueryString = cmdDatosBasicos.QueryString + " AND idcuentacobro IN (SELECT idcuentacobro FROM cm_cuentacobro ";
-                cmdDatosBasicos.QueryString = cmdDatosBasicos.QueryString + " AND idciclofacturacion IN (select idciclofacturacion from cm_vigencia where bloqueomovimiento='S')";
+                cmdDatosBasicos.QueryString = cmdDatosBasicos.QueryString + " WHERE idciclofacturacion IN (select idciclofacturacion from cm_vigencia where bloqueomovimiento='S'))";
 
                 dtEstadoFacturacion = cmdDatosBasicos.ExecuteStringCommand();
                     if (dtEstadoFacturacion.Rows.Count > 0)

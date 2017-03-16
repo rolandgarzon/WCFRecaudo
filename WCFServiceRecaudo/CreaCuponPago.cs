@@ -74,7 +74,7 @@ namespace WCFServiceRecaudo
                 //omb.ShowMessage("Se genero con exito el cupón: " + idSecuencia);
 
                 SiewebDBCommand cmdRetornaCuponpago = new SiewebDBCommand();
-                cmdRetornaCuponpago.QueryString = "SELECT SubStr(idcuponpago,numerolugartrabajo),valor,fechageneracion,idcuentacobro FROM cm_cuponpago WHERE idcuponpago= " + numeroSecuencia;
+                cmdRetornaCuponpago.QueryString = "SELECT SubStr(idcuponpago,8),valor,fechageneracion,idcuentacobro FROM cm_cuponpago WHERE idcuponpago= " + numeroSecuencia;
                 cmdRetornaCuponpago.ExecuteStringNonQueryCommand();
 
                 dtDatosCuponGenerado = cmdRetornaCuponpago.ExecuteStringCommand();
