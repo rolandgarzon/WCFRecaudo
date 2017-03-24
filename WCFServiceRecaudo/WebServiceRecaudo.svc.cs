@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-
-
+using System.Data.OracleClient;
 
 namespace WCFServiceRecaudo
 {
@@ -83,8 +82,10 @@ namespace WCFServiceRecaudo
                     return ConsultaCuponPago;
                 }
             }
-            catch
+            catch (OracleException e)
             {
+                string errorMessage = "Code: " + e.Code + "\n" +
+                                      "Message: " + e.Message;
                 DatosCuponPago.MensajeRespuestaError = "Ocurrio un error no controlado contacte con el administrador";
                 ConsultaCuponPago.Add(DatosCuponPago);
                 return ConsultaCuponPago;
@@ -180,8 +181,10 @@ namespace WCFServiceRecaudo
                     }
                 }
             }
-            catch
+            catch (OracleException e)
             {
+                string errorMessage = "Code: " + e.Code + "\n" +
+                                      "Message: " + e.Message;
                 DatosSuscriptor.MensajeRespuestaError = "Ocurrio un error no controlado contacte con el administrador";
                 ConsultaSuscriptor.Add(DatosSuscriptor);
                 return ConsultaSuscriptor;
@@ -228,8 +231,10 @@ namespace WCFServiceRecaudo
                     }
                 }
             }
-            catch
+            catch (OracleException e)
             {
+                string errorMessage = "Code: " + e.Code + "\n" +
+                                      "Message: " + e.Message;
                 return true;
             }
         }
@@ -252,8 +257,12 @@ namespace WCFServiceRecaudo
             CreaCuponPago objDatosCuponPago = new CreaCuponPago();
             int nuIdTipoCuponPago = 2;
             int nuIdEstadoCuponPago = 1;
+            int nuIdPais = 57; int nuIdDepartamento = 76; int nuIdMunicipio = 834;
+            string lugartrabajo = nuIdPais.ToString() + nuIdDepartamento.ToString() + nuIdMunicipio.ToString();
+            string vafullIdSuscriptor = lugartrabajo + nuIdSuscriptor.ToString();
+            long nufullIdSuscriptor = Convert.ToInt64(vafullIdSuscriptor);
             return RetornaDatosCuponPago = objDatosCuponPago.creaCuponPago(
-                                                nuIdSuscriptor,
+                                                nufullIdSuscriptor,
                                                 nuValorCuponPago,
                                                 nuIdTipoCuponPago,
                                                 nuIdEstadoCuponPago,

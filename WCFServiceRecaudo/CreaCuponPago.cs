@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Net;
 using System.Data;
+using System.Data.OracleClient;
 
 namespace WCFServiceRecaudo
 {
@@ -74,22 +75,24 @@ namespace WCFServiceRecaudo
                 //omb.ShowMessage("Se genero con exito el cupón: " + idSecuencia);
 
                 SiewebDBCommand cmdRetornaCuponpago = new SiewebDBCommand();
-                cmdRetornaCuponpago.QueryString = "SELECT SubStr(idcuponpago,8),valor,fechageneracion,idcuentacobro FROM cm_cuponpago WHERE idcuponpago= " + numeroSecuencia;
+                cmdRetornaCuponpago.QueryString = "SELECT SubStr(idcuponpago,8)cuponpago,valor,fechageneracion,idcuentacobro FROM cm_cuponpago WHERE idcuponpago= " + numeroSecuencia;
                 cmdRetornaCuponpago.ExecuteStringNonQueryCommand();
 
                 dtDatosCuponGenerado = cmdRetornaCuponpago.ExecuteStringCommand();
                 foreach (DataRow dr in dtDatosCuponGenerado.Rows)
                 {
                     
-                    ConsultaCuponPagoNuevo.nuIdCuponPago = Convert.ToInt64(dr["idcuponpago"]);
+                    ConsultaCuponPagoNuevo.nuIdCuponPago = Convert.ToInt64(dr["cuponpago"]);
                     ConsultaCuponPagoNuevo.nuValorCuponPago = Convert.ToInt32(dr["valor"]);
                     ConsultaCuponPagoNuevo.daFechaGeneracion = Convert.ToDateTime(dr["fechageneracion"]);
                     RetornaConsultaCuponPago.Add(ConsultaCuponPagoNuevo);
                 }
                 return RetornaConsultaCuponPago;
             }
-            catch
+            catch (OracleException e)
             {
+                string errorMessage = "Code: " + e.Code + "\n" +
+                                      "Message: " + e.Message;
                 ConsultaCuponPagoNuevo.MensajeRespuestaError = "Ocurrio un error no controlado contacte con el administrador";
                 return RetornaConsultaCuponPago;
             }
